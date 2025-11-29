@@ -58,6 +58,10 @@ aws_config.json
 *.pem
 *.key
 
+# Flask app (old, not used)
+flask_app.py.bak
+app.py
+
 # Streamlit
 .streamlit/
 
