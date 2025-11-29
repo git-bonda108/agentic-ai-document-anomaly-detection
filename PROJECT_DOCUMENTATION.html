@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>PROJECT_DOCUMENTATION</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="document-anomaly-detection-system">Document Anomaly Detection System</h1>
+<h2 id="ml-powered-human-in-the-loop-solution-on-aws">ML-Powered Human-in-the-Loop Solution on AWS</h2>
+<hr />
+<h2 id="executive-summary">Executive Summary</h2>
+<p>The Document Anomaly Detection System is an enterprise-grade, ML-powered solution designed to automatically detect anomalies between lease contracts and invoices. The system leverages OpenAI GPT-4o for intelligent document processing, XGBoost for machine learning-based anomaly detection, and reinforcement learning with human feedback to continuously improve accuracy. Deployed on AWS infrastructure, it provides real-time observability, scalable batch processing, and a seamless human-in-the-loop workflow for validation and model improvement.</p>
+<hr />
+<h2 id="problem-statement">1. Problem Statement</h2>
+<h3 id="business-challenge">1.1 Business Challenge</h3>
+<p>Organizations processing large volumes of lease contracts and invoices face significant challenges:</p>
+<ul>
+<li><strong>Manual Review Overhead</strong>: Manual review of contract-invoice pairs is time-consuming, error-prone, and expensive.</li>
+<li><strong>Anomaly Detection Complexity</strong>: Identifying discrepancies requires deep domain knowledge and careful cross-referencing of:
+<ul>
+<li>Date mismatches (payment dates, lease start/end dates)</li>
+<li>Amount discrepancies (rental fees, total amounts, deposits)</li>
+<li>Schedule misses (missing payment schedules, duplicate entries)</li>
+<li>Surplus/missed payments (overpayments, underpayments)</li>
+<li>Schedule misalignment (payment dates vs. lease terms)</li>
+</ul></li>
+<li><strong>Scalability Issues</strong>: Manual processes don’t scale with increasing document volume.</li>
+<li><strong>Inconsistent Detection</strong>: Human reviewers may miss subtle anomalies or apply inconsistent criteria.</li>
+<li><strong>Lack of Learning</strong>: Manual processes don’t learn from past corrections, leading to repeated errors.</li>
+</ul>
+<h3 id="technical-requirements">1.2 Technical Requirements</h3>
+<p>The solution must:</p>
+<ul>
+<li>Process multiple document formats (PDF, DOCX, images)</li>
+<li>Perform semantic understanding of contract and invoice content</li>
+<li>Cross-reference documents intelligently</li>
+<li>Detect anomalies with high accuracy</li>
+<li>Provide human feedback mechanisms for continuous improvement</li>
+<li>Scale to handle batch processing of large document sets</li>
+<li>Offer real-time observability into system operations</li>
+<li>Integrate seamlessly with AWS infrastructure</li>
+</ul>
+<hr />
+<h2 id="solution-overview">2. Solution Overview</h2>
+<h3 id="architecture-approach">2.1 Architecture Approach</h3>
+<p>The solution employs a <strong>multi-agent, event-driven architecture</strong> with the following design principles:</p>
+<ul>
+<li><strong>Agentic AI</strong>: Specialized agents handle distinct responsibilities (ingestion, extraction, anomaly detection, validation)</li>
+<li><strong>Orchestration</strong>: Central orchestrator manages workflow, context, and agent coordination</li>
+<li><strong>ML-Powered</strong>: XGBoost model learns from labeled data and human feedback</li>
+<li><strong>Reinforcement Learning</strong>: Human-in-the-loop feedback continuously improves model performance</li>
+<li><strong>Cloud-Native</strong>: Built on AWS for scalability, reliability, and cost-effectiveness</li>
+<li><strong>Observable</strong>: Real-time monitoring of agent actions, costs, and performance metrics</li>
+</ul>
+<h3 id="core-capabilities">2.2 Core Capabilities</h3>
+<h4 id="intelligent-document-processing"><strong>2.2.1 Intelligent Document Processing</strong></h4>
+<ul>
+<li>Multi-format support (PDF, DOCX, images with OCR)</li>
+<li>Semantic extraction using GPT-4o</li>
+<li>Automatic document classification (contract vs. invoice)</li>
+<li>Metadata extraction (dates, amounts, parties, terms)</li>
+</ul>
+<h4 id="anomaly-detection"><strong>2.2.2 Anomaly Detection</strong></h4>
+<ul>
+<li>Contract-invoice comparison</li>
+<li>Detection of:
+<ul>
+<li>Date mismatches</li>
+<li>Amount discrepancies</li>
+<li>Schedule misses</li>
+<li>Surplus/missed payments</li>
+<li>Schedule misalignments</li>
+</ul></li>
+<li>Confidence scoring for each anomaly</li>
+</ul>
+<h4 id="machine-learning-reinforcement-learning"><strong>2.2.3 Machine Learning &amp; Reinforcement Learning</strong></h4>
+<ul>
+<li>XGBoost classifier for supervised learning</li>
+<li>Training on labeled anomaly data</li>
+<li>Reinforcement learning from human feedback</li>
+<li>Model versioning and retraining pipeline</li>
+<li>Performance metrics (F1, Precision, Recall, Confusion Matrix)</li>
+</ul>
+<h4 id="human-in-the-loop-hitl"><strong>2.2.4 Human-in-the-Loop (HITL)</strong></h4>
+<ul>
+<li>Feedback collection interface</li>
+<li>Per-anomaly feedback (Correct/False Positive/False Negative)</li>
+<li>Correction notes and adjustments</li>
+<li>Automatic model updates from feedback</li>
+<li>HITL queue management</li>
+</ul>
+<h4 id="business-rules-validation"><strong>2.2.5 Business Rules Validation</strong></h4>
+<ul>
+<li>Configurable business thresholds</li>
+<li>Rule-based validation of detected anomalies</li>
+<li>Severity assessment</li>
+<li>Validation summaries and recommendations</li>
+</ul>
+<hr />
+<h2 id="aws-workflow">3. AWS Workflow</h2>
+<h3 id="infrastructure-components">3.1 Infrastructure Components</h3>
+<h4 id="amazon-s3"><strong>3.1.1 Amazon S3</strong></h4>
+<ul>
+<li><strong>Purpose</strong>: Document storage</li>
+<li><strong>Buckets</strong>:
+<ul>
+<li><code>doc-anomaly-raw-docs-{account-id}</code>: Raw uploaded documents</li>
+<li><code>doc-anomaly-processed-{account-id}</code>: Processed documents</li>
+<li><code>doc-anomaly-embeddings-{account-id}</code>: Document embeddings</li>
+<li><code>doc-anomaly-models-{account-id}</code>: Trained ML models</li>
+</ul></li>
+<li><strong>Usage</strong>: Central repository for all document-related data</li>
+</ul>
+<h4 id="amazon-dynamodb"><strong>3.1.2 Amazon DynamoDB</strong></h4>
+<ul>
+<li><strong>Purpose</strong>: Metadata, feedback, and results storage</li>
+<li><strong>Tables</strong>:
+<ul>
+<li><code>doc-anomaly-metadata-{account-id}</code>: Document metadata</li>
+<li><code>doc-anomaly-anomalies-{account-id}</code>: Detected anomalies</li>
+<li><code>doc-anomaly-feedback-{account-id}</code>: Human feedback</li>
+<li><code>doc-anomaly-business-rules-{account-id}</code>: Business rules</li>
+<li><code>doc-anomaly-validation-{account-id}</code>: Validation results</li>
+<li><code>doc-anomaly-contracts-{account-id}</code>: Contract-invoice mappings</li>
+</ul></li>
+<li><strong>Usage</strong>: Fast, scalable access to structured data</li>
+</ul>
+<h4 id="amazon-cloudwatch"><strong>3.1.3 Amazon CloudWatch</strong></h4>
+<ul>
+<li><strong>Purpose</strong>: Logging and monitoring</li>
+<li><strong>Log Groups</strong>: Agent-specific log groups for observability</li>
+<li><strong>Metrics</strong>: Custom metrics for performance, costs, token usage</li>
+<li><strong>Usage</strong>: Real-time monitoring and troubleshooting</li>
+</ul>
+<h4 id="amazon-ec2"><strong>3.1.4 Amazon EC2</strong></h4>
+<ul>
+<li><strong>Purpose</strong>: Application hosting</li>
+<li><strong>Instance</strong>: t3.medium or t3.large (recommended)</li>
+<li><strong>Service</strong>: Streamlit application running on port 8501</li>
+<li><strong>Usage</strong>: Web interface for users</li>
+</ul>
+<h3 id="document-processing-workflow">3.2 Document Processing Workflow</h3>
+<pre><code>1. Document Upload
+   ↓
+2. S3 Storage (raw-docs bucket)
+   ↓
+3. Document Ingestion Agent
+   ├─ Extract text content
+   ├─ Classify document type
+   └─ Generate document ID
+   ↓
+4. Extraction Agent (GPT-4o)
+   ├─ Semantic extraction
+   ├─ Key field identification
+   └─ Relationship mapping
+   ↓
+5. Orchestrator Manager
+   ├─ Match contracts with invoices
+   ├─ Coordinate agent workflow
+   └─ Manage context
+   ↓
+6. Contract-Invoice Comparison Agent
+   ├─ Date comparison
+   ├─ Amount comparison
+   ├─ Schedule comparison
+   └─ Anomaly detection
+   ↓
+7. ML Model (XGBoost)
+   ├─ Anomaly classification
+   ├─ Confidence scoring
+   └─ Feature importance
+   ↓
+8. Validation Agent
+   ├─ Business rules check
+   ├─ Threshold validation
+   └─ Severity assessment
+   ↓
+9. Results Storage
+   ├─ DynamoDB (anomalies, metadata)
+   ├─ S3 (processed documents)
+   └─ CloudWatch (logs, metrics)
+   ↓
+10. Human Review (HITL)
+    ├─ Feedback collection
+    ├─ Corrections
+    └─ Model updates</code></pre>
+<h3 id="batch-processing-workflow">3.3 Batch Processing Workflow</h3>
+<pre><code>1. User selects S3 folder
+   ↓
+2. Batch Ingestion Agent
+   ├─ List all documents in folder
+   ├─ Group by type (contracts/invoices)
+   └─ Queue for processing
+   ↓
+3. Process in batches (configurable size)
+   ├─ Parallel processing (optional)
+   └─ Progress tracking
+   ↓
+4. Standard processing workflow
+   (same as single document)
+   ↓
+5. Batch results aggregation
+   ├─ Summary statistics
+   ├─ Anomaly counts
+   └─ Export capabilities</code></pre>
+<h3 id="training-reinforcement-learning-workflow">3.4 Training &amp; Reinforcement Learning Workflow</h3>
+<pre><code>1. Collect Labeled Data
+   ├─ From HITL feedback
+   ├─ Historical anomalies
+   └─ Manual labels
+   ↓
+2. Feature Extraction
+   ├─ Anomaly features
+   ├─ Document features
+   └─ Context features
+   ↓
+3. Train XGBoost Model
+   ├─ Train/test split
+   ├─ Hyperparameter tuning
+   └─ Model evaluation
+   ↓
+4. Performance Metrics
+   ├─ F1 Score
+   ├─ Precision/Recall
+   ├─ Confusion Matrix
+   └─ Feature Importance
+   ↓
+5. Model Deployment
+   ├─ Version management
+   ├─ A/B testing (optional)
+   └─ Rollback capability
+   ↓
+6. Reinforcement Learning
+   ├─ Collect new feedback
+   ├─ Update model
+   └─ Evaluate improvement</code></pre>
+<hr />
+<h2 id="tech-stack">4. Tech Stack</h2>
+<h3 id="core-technologies">4.1 Core Technologies</h3>
+<h4 id="aiml-frameworks"><strong>4.1.1 AI/ML Frameworks</strong></h4>
+<ul>
+<li><strong>OpenAI GPT-4o</strong>: LLM for semantic extraction, document understanding, and intelligent comparison</li>
+<li><strong>XGBoost</strong>: Gradient boosting classifier for supervised anomaly detection</li>
+<li><strong>scikit-learn</strong>: Machine learning utilities, evaluation metrics</li>
+<li><strong>pandas/numpy</strong>: Data manipulation and processing</li>
+</ul>
+<h4 id="aws-services"><strong>4.1.2 AWS Services</strong></h4>
+<ul>
+<li><strong>S3</strong>: Object storage for documents and models</li>
+<li><strong>DynamoDB</strong>: NoSQL database for metadata and results</li>
+<li><strong>CloudWatch</strong>: Logging, monitoring, and metrics</li>
+<li><strong>EC2</strong>: Compute for hosting Streamlit application</li>
+<li><strong>IAM</strong>: Access control and security</li>
+</ul>
+<h4 id="application-framework"><strong>4.1.3 Application Framework</strong></h4>
+<ul>
+<li><strong>Streamlit</strong>: Web application framework for UI</li>
+<li><strong>Python 3.9+</strong>: Primary programming language</li>
+<li><strong>FastAPI/Flask</strong>: RESTful API (optional for future expansion)</li>
+</ul>
+<h4 id="document-processing"><strong>4.1.4 Document Processing</strong></h4>
+<ul>
+<li><strong>PyPDF2</strong>: PDF text extraction</li>
+<li><strong>python-docx</strong>: DOCX processing</li>
+<li><strong>PIL/Pillow</strong>: Image processing</li>
+<li><strong>pytesseract</strong>: OCR for image-based documents (optional)</li>
+</ul>
+<h4 id="data-visualization"><strong>4.1.5 Data &amp; Visualization</strong></h4>
+<ul>
+<li><strong>Plotly</strong>: Interactive visualizations</li>
+<li><strong>matplotlib/seaborn</strong>: Static charts and graphs</li>
+<li><strong>pandas</strong>: Data analysis and manipulation</li>
+</ul>
+<h3 id="development-tools">4.2 Development Tools</h3>
+<ul>
+<li><strong>Git</strong>: Version control</li>
+<li><strong>Virtual Environment</strong>: Python isolation</li>
+<li><strong>dotenv</strong>: Environment variable management</li>
+<li><strong>boto3</strong>: AWS SDK for Python</li>
+</ul>
+<h3 id="deployment">4.3 Deployment</h3>
+<ul>
+<li><strong>Systemd</strong>: Service management on EC2</li>
+<li><strong>Nginx</strong>: Reverse proxy (optional)</li>
+<li><strong>SSH</strong>: Secure remote access</li>
+</ul>
+<hr />
+<h2 id="individual-functionalities">5. Individual Functionalities</h2>
+<h3 id="document-ingestion-agent">5.1 Document Ingestion Agent</h3>
+<p><strong>Purpose</strong>: Handle document upload, validation, and initial processing</p>
+<p><strong>Key Functions</strong>: - File format validation (PDF, DOCX, images) - File size checks (max 50MB) - Text extraction from documents - Document classification (contract/invoice) - Document ID generation (hash-based) - Metadata extraction (file size, upload time, format)</p>
+<p><strong>Output</strong>: Document metadata and raw text content</p>
+<hr />
+<h3 id="extraction-agent">5.2 Extraction Agent</h3>
+<p><strong>Purpose</strong>: Intelligent extraction of key information using GPT-4o</p>
+<p><strong>Key Functions</strong>: - Semantic understanding of document content - Key field extraction: - Dates (lease start, end, payment dates) - Amounts (rental fees, deposits, totals) - Parties (lessor, lessee) - Terms (payment frequency, lease duration) - Relationship identification - Context preservation</p>
+<p><strong>Technologies</strong>: OpenAI GPT-4o API</p>
+<p><strong>Output</strong>: Structured extracted data with confidence scores</p>
+<hr />
+<h3 id="orchestrator-manager">5.3 Orchestrator Manager</h3>
+<p><strong>Purpose</strong>: Central coordination of multi-agent workflow</p>
+<p><strong>Key Functions</strong>: - Agent coordination and task delegation - Context management across agents - Contract-invoice matching logic - HITL queue management - Workflow state tracking - Error handling and retry logic</p>
+<p><strong>Output</strong>: Coordinated workflow results and context</p>
+<hr />
+<h3 id="contract-invoice-comparison-agent">5.4 Contract-Invoice Comparison Agent</h3>
+<p><strong>Purpose</strong>: Specialized anomaly detection between contracts and invoices</p>
+<p><strong>Key Functions</strong>: - <strong>Date Mismatch Detection</strong>: - Payment dates vs. lease terms - Invoice dates vs. contract dates - Late payment identification - <strong>Amount Discrepancy Detection</strong>: - Rental fee mismatches - Deposit amount differences - Total amount validation - <strong>Schedule Miss Detection</strong>: - Missing payment schedules - Duplicate payment entries - Extra payment identification - <strong>Payment Anomaly Detection</strong>: - Surplus payments (overpayments) - Missed payments (underpayments) - <strong>Schedule Alignment Check</strong>: - Payment frequency validation - Date alignment verification</p>
+<p><strong>Output</strong>: List of detected anomalies with details and confidence scores</p>
+<hr />
+<h3 id="validation-agent">5.5 Validation Agent</h3>
+<p><strong>Purpose</strong>: Business rules and threshold validation</p>
+<p><strong>Key Functions</strong>: - Business threshold checking: - Amount thresholds (tolerance levels) - Date threshold (grace periods) - Schedule threshold (allowed misses) - Rule-based validation: - Lease type-specific rules - Company-specific policies - Severity assessment: - Critical anomalies - Warning-level anomalies - Informational anomalies - Summary generation: - Validation summary - Recommendations - Action items</p>
+<p><strong>Configuration</strong>: Business rules stored in DynamoDB</p>
+<p><strong>Output</strong>: Validation results with summaries and recommendations</p>
+<hr />
+<h3 id="training-agent">5.6 Training Agent</h3>
+<p><strong>Purpose</strong>: ML model training and reinforcement learning</p>
+<p><strong>Key Functions</strong>: - <strong>Supervised Learning</strong>: - Feature extraction from labeled data - XGBoost model training - Hyperparameter tuning - Model evaluation - <strong>Reinforcement Learning</strong>: - Feedback processing - Reward calculation from feedback - Model updates from feedback - Incremental learning - <strong>Model Management</strong>: - Version control - Model persistence (pickle/S3) - Performance tracking - A/B testing support</p>
+<p><strong>Metrics</strong>: - Accuracy, Precision, Recall, F1 Score - Confusion Matrix - ROC/PR Curves - Feature Importance</p>
+<p><strong>Output</strong>: Trained model and performance metrics</p>
+<hr />
+<h3 id="batch-ingestion-agent">5.7 Batch Ingestion Agent</h3>
+<p><strong>Purpose</strong>: Process multiple documents from S3 folders</p>
+<p><strong>Key Functions</strong>: - S3 folder scanning - Document listing and filtering - Batch grouping (by type, size) - Parallel processing support - Progress tracking - Error handling per document - Result aggregation</p>
+<p><strong>Configuration</strong>: - Batch size (configurable) - Parallel workers (optional) - Retry logic</p>
+<p><strong>Output</strong>: Batch processing results and summaries</p>
+<hr />
+<h3 id="human-in-the-loop-hitl-system">5.8 Human-in-the-Loop (HITL) System</h3>
+<p><strong>Purpose</strong>: Collect and process human feedback for model improvement</p>
+<p><strong>Key Functions</strong>: - <strong>Feedback Collection</strong>: - Per-anomaly feedback (Correct/False Positive/False Negative) - Overall prediction feedback - Correction notes - Adjustment requests - <strong>Feedback Processing</strong>: - Feedback storage (DynamoDB) - Reward calculation - Training data preparation - Model update triggering - <strong>HITL Queue Management</strong>: - Queue display - Priority handling - Status tracking</p>
+<p><strong>Integration</strong>: Orchestrator Manager coordinates HITL workflow</p>
+<p><strong>Output</strong>: Feedback records and model update triggers</p>
+<hr />
+<h3 id="observability-system">5.9 Observability System</h3>
+<p><strong>Purpose</strong>: Real-time monitoring and logging</p>
+<p><strong>Key Functions</strong>: - <strong>Agent Status Monitoring</strong>: - Agent health checks - Processing status - Error rates - <strong>Cost Tracking</strong>: - OpenAI API token usage - AWS service costs - Per-document costs - <strong>Performance Metrics</strong>: - Processing times - Throughput - Latency - <strong>Logging</strong>: - Agent actions - Decision logs - Error logs - Debug information</p>
+<p><strong>Technologies</strong>: CloudWatch Logs and Metrics</p>
+<p><strong>Output</strong>: Dashboards and reports</p>
+<hr />
+<h3 id="streamlit-user-interface">5.10 Streamlit User Interface</h3>
+<p><strong>Purpose</strong>: Web-based user interface for all functionalities</p>
+<p><strong>Pages</strong>: 1. <strong>Upload &amp; Process</strong>: Single document upload and processing 2. <strong>Batch Processing (S3)</strong>: Process entire S3 folders 3. <strong>Results Dashboard</strong>: View all results and anomalies 4. <strong>Human Feedback</strong>: Provide feedback on detected anomalies 5. <strong>Metrics &amp; Analytics</strong>: View ML performance metrics 6. <strong>Observability</strong>: Monitor system status and costs 7. <strong>Training Management</strong>: Train, retrain, and manage models</p>
+<p><strong>Features</strong>: - Interactive visualizations - Real-time updates - Export capabilities - Responsive design</p>
+<hr />
+<h2 id="machine-learning-approach">6. Machine Learning Approach</h2>
+<h3 id="model-architecture">6.1 Model Architecture</h3>
+<p><strong>Primary Model</strong>: XGBoost Classifier - <strong>Type</strong>: Gradient Boosting Decision Tree - <strong>Purpose</strong>: Binary and multi-class anomaly classification - <strong>Features</strong>: - Anomaly type features - Date difference features - Amount difference features - Document similarity features - Historical pattern features</p>
+<h3 id="training-data">6.2 Training Data</h3>
+<ul>
+<li><strong>Source</strong>:
+<ul>
+<li>Human-labeled anomalies (HITL feedback)</li>
+<li>Historical anomaly data</li>
+<li>Manually curated datasets</li>
+</ul></li>
+<li><strong>Preprocessing</strong>:
+<ul>
+<li>Feature engineering</li>
+<li>Normalization</li>
+<li>Handling missing values</li>
+</ul></li>
+</ul>
+<h3 id="reinforcement-learning">6.3 Reinforcement Learning</h3>
+<ul>
+<li><strong>Method</strong>: Feedback-based model updates</li>
+<li><strong>Reward Signal</strong>: Human feedback (Correct = positive, Incorrect = negative)</li>
+<li><strong>Update Frequency</strong>: Batch updates after threshold feedback volume</li>
+<li><strong>Incremental Learning</strong>: Continuous improvement from new feedback</li>
+</ul>
+<h3 id="evaluation-metrics">6.4 Evaluation Metrics</h3>
+<ul>
+<li><strong>F1 Score</strong>: Harmonic mean of precision and recall</li>
+<li><strong>Precision</strong>: Ratio of true positives to all positives</li>
+<li><strong>Recall</strong>: Ratio of true positives to all actual positives</li>
+<li><strong>Accuracy</strong>: Overall correctness</li>
+<li><strong>Confusion Matrix</strong>: Detailed classification breakdown</li>
+</ul>
+<hr />
+<h2 id="deployment-architecture">7. Deployment Architecture</h2>
+<h3 id="aws-infrastructure">7.1 AWS Infrastructure</h3>
+<pre><code>┌─────────────────────────────────────────┐
+│           AWS Cloud                      │
+│                                          │
+│  ┌────────────────────────────────────┐  │
+│  │         Amazon EC2                 │  │
+│  │  ┌──────────────────────────────┐  │  │
+│  │  │  Streamlit Application       │  │  │
+│  │  │  - Multi-agent system        │  │  │
+│  │  │  - GPT-4o integration        │  │  │
+│  │  │  - XGBoost models            │  │  │
+│  │  └──────────────────────────────┘  │  │
+│  └────────────────────────────────────┘  │
+│                                          │
+│  ┌────────────────────────────────────┐  │
+│  │         Amazon S3                   │  │
+│  │  - Raw documents                   │  │
+│  │  - Processed documents             │  │
+│  │  - ML models                       │  │
+│  │  - Embeddings                      │  │
+│  └────────────────────────────────────┘  │
+│                                          │
+│  ┌────────────────────────────────────┐  │
+│  │      Amazon DynamoDB                │  │
+│  │  - Metadata                        │  │
+│  │  - Anomalies                       │  │
+│  │  - Feedback                        │  │
+│  │  - Business rules                   │  │
+│  └────────────────────────────────────┘  │
+│                                          │
+│  ┌────────────────────────────────────┐  │
+│  │      Amazon CloudWatch              │  │
+│  │  - Logs                            │  │
+│  │  - Metrics                         │  │
+│  │  - Dashboards                     │  │
+│  └────────────────────────────────────┘  │
+│                                          │
+└─────────────────────────────────────────┘
+           │
+           │ Internet
+           │
+┌─────────────────────────────────────────┐
+│        User Browser                     │
+│  http://&lt;EC2_PUBLIC_IP&gt;:8501          │
+└─────────────────────────────────────────┘</code></pre>
+<h3 id="security">7.2 Security</h3>
+<ul>
+<li><strong>IAM Roles</strong>: Least privilege access</li>
+<li><strong>Encryption</strong>: S3 encryption at rest, HTTPS in transit</li>
+<li><strong>Key Management</strong>: Environment variables, AWS Secrets Manager (optional)</li>
+<li><strong>Network Security</strong>: Security groups with restricted access</li>
+</ul>
+<hr />
+<h2 id="performance-scalability">8. Performance &amp; Scalability</h2>
+<h3 id="performance-characteristics">8.1 Performance Characteristics</h3>
+<ul>
+<li><strong>Single Document Processing</strong>: ~10-30 seconds (depending on document size)</li>
+<li><strong>Batch Processing</strong>: Configurable batch size, parallel processing support</li>
+<li><strong>ML Inference</strong>: &lt;1 second per document</li>
+<li><strong>API Response</strong>: Real-time streaming updates</li>
+</ul>
+<h3 id="scalability">8.2 Scalability</h3>
+<ul>
+<li><strong>Horizontal Scaling</strong>: Multiple EC2 instances (load balancer)</li>
+<li><strong>Vertical Scaling</strong>: Upgrade EC2 instance type</li>
+<li><strong>S3</strong>: Virtually unlimited storage</li>
+<li><strong>DynamoDB</strong>: Auto-scaling based on load</li>
+<li><strong>Batch Processing</strong>: Handles 1000+ documents per batch</li>
+</ul>
+<hr />
+<h2 id="cost-optimization">9. Cost Optimization</h2>
+<h3 id="cost-components">9.1 Cost Components</h3>
+<ul>
+<li><strong>EC2</strong>: ~$30-60/month (t3.medium/large)</li>
+<li><strong>S3</strong>: ~$0.023/GB/month storage + transfer costs</li>
+<li><strong>DynamoDB</strong>: ~$0.25/million reads, $1.25/million writes</li>
+<li><strong>CloudWatch</strong>: ~$0.50/GB log ingestion</li>
+<li><strong>OpenAI API</strong>: Pay-per-use, varies by usage</li>
+</ul>
+<h3 id="optimization-strategies">9.2 Optimization Strategies</h3>
+<ul>
+<li>Use EC2 Spot Instances for development</li>
+<li>S3 lifecycle policies for old documents</li>
+<li>DynamoDB on-demand billing</li>
+<li>CloudWatch log retention policies</li>
+<li>Batch API calls to OpenAI for efficiency</li>
+</ul>
+<hr />
+<h2 id="future-enhancements">10. Future Enhancements</h2>
+<h3 id="planned-features">10.1 Planned Features</h3>
+<ul>
+<li><strong>Multi-language Support</strong>: Process documents in multiple languages</li>
+<li><strong>Advanced OCR</strong>: Improved image document processing</li>
+<li><strong>Real-time Processing</strong>: WebSocket-based real-time updates</li>
+<li><strong>API Integration</strong>: RESTful API for programmatic access</li>
+<li><strong>Mobile App</strong>: Native mobile application</li>
+<li><strong>Advanced Analytics</strong>: Predictive analytics and trends</li>
+<li><strong>Integration</strong>: Connect with accounting systems (QuickBooks, SAP)</li>
+</ul>
+<h3 id="model-improvements">10.2 Model Improvements</h3>
+<ul>
+<li><strong>Deep Learning</strong>: Neural network models for complex patterns</li>
+<li><strong>Ensemble Methods</strong>: Combine multiple models</li>
+<li><strong>Active Learning</strong>: Intelligent data labeling</li>
+<li><strong>Transfer Learning</strong>: Leverage pre-trained models</li>
+</ul>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>The Document Anomaly Detection System provides a comprehensive, scalable, and intelligent solution for detecting anomalies between lease contracts and invoices. By combining OpenAI GPT-4o’s semantic understanding with XGBoost’s classification power and human-in-the-loop feedback, it delivers high accuracy while continuously improving. Deployed on AWS, it offers enterprise-grade scalability, reliability, and observability.</p>
+<p>The system’s multi-agent architecture, ML-powered detection, and seamless HITL workflow make it a production-ready solution for organizations processing large volumes of lease documents.</p>
+<hr />
+<p><strong>Version</strong>: 1.0<br />
+<strong>Last Updated</strong>: November 2025<br />
+<strong>Contact</strong>: System Administrator<br />
+<strong>Documentation</strong>: See <code>EC2_DEPLOYMENT_STEPS.md</code> for deployment instructions</p>
+</body>
+</html>

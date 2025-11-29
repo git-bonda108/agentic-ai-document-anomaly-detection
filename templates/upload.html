@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Document - DOC Anomaly Detection System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-upload"></i> Upload Document for Processing
+                </h4>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data" id="upload-form">
+                    <div class="upload-area" id="upload-area" onclick="document.getElementById('file').click()">
+                        <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                        <h5>Drop your document here or click to browse</h5>
+                        <p class="text-muted">Supports PDF, DOCX, and image files up to 50MB</p>
+                        <input type="file" id="file" name="file" accept=".pdf,.docx,.doc,.jpg,.jpeg,.png,.tiff" style="display: none;">
+                    </div>
+                    
+                    <div id="file-info"></div>
+                    
+                    <div class="mt-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-info-circle"></i> Supported Formats</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-file-pdf text-danger"></i> PDF Documents</li>
+                                    <li><i class="fas fa-file-word text-primary"></i> Word Documents (DOCX/DOC)</li>
+                                    <li><i class="fas fa-image text-success"></i> Images (JPG, PNG, TIFF)</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-shield-alt"></i> Processing Features</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-search"></i> Data Extraction</li>
+                                    <li><i class="fas fa-exclamation-triangle"></i> Anomaly Detection</li>
+                                    <li><i class="fas fa-check-circle"></i> Quality Validation</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg" onclick="showLoading()">
+                            <i class="fas fa-play"></i> Process Document
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-lg ms-2" onclick="clearFile()">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                    
+                    <div id="loading" class="loading mt-3">
+                        <div class="alert alert-info">
+                            <div class="d-flex align-items-center">
+                                <div class="spinner-border spinner-border-sm me-3" role="status">
+                                    <span class="visually-hidden">Processing...</span>
+                                </div>
+                                <strong>Processing document...</strong>
+                            </div>
+                            <div class="mt-2">
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                         role="progressbar" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-lightbulb"></i> What Gets Detected?
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="anomaly-type">
+                            <div class="anomaly-icon">
+                                <i class="fas fa-exchange-alt text-warning"></i>
+                            </div>
+                            <h6>PO Mismatch</h6>
+                            <p>Detects discrepancies between invoice PO numbers and contract references</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="anomaly-type">
+                            <div class="anomaly-icon">
+                                <i class="fas fa-calendar-times text-danger"></i>
+                            </div>
+                            <h6>Date Mismatch</h6>
+                            <p>Identifies inconsistencies in dates across related documents</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="anomaly-type">
+                            <div class="anomaly-icon">
+                                <i class="fas fa-copy text-info"></i>
+                            </div>
+                            <h6>Duplicates</h6>
+                            <p>Finds duplicate or similar documents and line items</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="anomaly-type">
+                            <div class="anomaly-icon">
+                                <i class="fas fa-chart-line text-success"></i>
+                            </div>
+                            <h6>Lease Schedule Discrepancies</h6>
+                            <p>Validates lease terms and payment schedules</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-cogs"></i> Processing Steps
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <h6>Document Ingestion</h6>
+                            <p>Upload and validate document format and integrity</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <h6>Data Extraction</h6>
+                            <p>Extract key fields like invoice numbers, dates, amounts</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <h6>Anomaly Detection</h6>
+                            <p>Apply business rules and detect anomalies</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="step-card">
+                            <div class="step-number">4</div>
+                            <h6>Quality Review</h6>
+                            <p>Generate report with recommendations</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.anomaly-type {
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    height: 100%;
+}
+
+.anomaly-icon {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+}
+
+.anomaly-type h6 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.anomaly-type p {
+    font-size: 0.9em;
+    color: #6c757d;
+    margin: 0;
+}
+
+.step-card {
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    height: 100%;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin: 0 auto 15px auto;
+}
+
+.step-card h6 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.step-card p {
+    font-size: 0.9em;
+    color: #6c757d;
+    margin: 0;
+}
+
+.upload-area {
+    transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+    .anomaly-type,
+    .step-card {
+        margin-bottom: 20px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function clearFile() {
+    document.getElementById('file').value = '';
+    document.getElementById('file-info').innerHTML = '';
+}
+
+// Form submission handling
+document.getElementById('upload-form').addEventListener('submit', function(e) {
+    const fileInput = document.getElementById('file');
+    if (!fileInput.files || fileInput.files.length === 0) {
+        e.preventDefault();
+        alert('Please select a file to upload.');
+        return false;
+    }
+    
+    const file = fileInput.files[0];
+    const maxSize = 50 * 1024 * 1024; // 50MB
+    
+    if (file.size > maxSize) {
+        e.preventDefault();
+        alert('File size exceeds 50MB limit.');
+        return false;
+    }
+    
+    showLoading();
+});
+
+// File validation
+document.getElementById('file').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+                             'application/msword', 'image/jpeg', 'image/png', 'image/tiff'];
+        
+        if (!allowedTypes.includes(file.type)) {
+            alert('Invalid file type. Please select a PDF, DOCX, or image file.');
+            this.value = '';
+            return;
+        }
+        
+        updateFileInfo(file);
+    }
+});
+</script>
+{% endblock %}
+

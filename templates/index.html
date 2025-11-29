@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - DOC Anomaly Detection System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-tachometer-alt"></i> System Dashboard
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-file-alt fa-2x text-primary mb-3"></i>
+                                <h5 class="card-title">Documents Processed</h5>
+                                <h2 class="text-primary" id="documents-processed">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-exclamation-triangle fa-2x text-warning mb-3"></i>
+                                <h5 class="card-title">Anomalies Detected</h5>
+                                <h2 class="text-warning" id="anomalies-detected">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
+                                <h5 class="card-title">Success Rate</h5>
+                                <h2 class="text-success" id="success-rate">0%</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-clock fa-2x text-info mb-3"></i>
+                                <h5 class="card-title">Avg Processing Time</h5>
+                                <h2 class="text-info" id="avg-time">0s</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-robot"></i> Agentic AI Workflow
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="workflow-steps">
+                            <div class="step">
+                                <div class="step-icon">
+                                    <i class="fas fa-upload"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h6>Document Ingestion</h6>
+                                    <p>Upload and validate document formats</p>
+                                </div>
+                            </div>
+                            <div class="step-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="step">
+                                <div class="step-icon">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h6>Data Extraction</h6>
+                                    <p>Extract key fields with confidence scoring</p>
+                                </div>
+                            </div>
+                            <div class="step-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="step">
+                                <div class="step-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h6>Anomaly Detection</h6>
+                                    <p>Detect PO mismatch, date discrepancies, duplicates</p>
+                                </div>
+                            </div>
+                            <div class="step-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="step">
+                                <div class="step-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h6>Quality Review</h6>
+                                    <p>Final validation and recommendations</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-cogs"></i> Quick Actions
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('upload_file') }}" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> Upload Document
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-chart-bar"></i> View Analytics
+                    </a>
+                    <button class="btn btn-outline-info" onclick="loadSampleData()">
+                        <i class="fas fa-download"></i> Load Sample Data
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-info-circle"></i> System Status
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="status-item">
+                    <span class="status-label">Document Ingestion Agent:</span>
+                    <span class="badge bg-success">Active</span>
+                </div>
+                <div class="status-item mt-2">
+                    <span class="status-label">Extraction Agent:</span>
+                    <span class="badge bg-success">Active</span>
+                </div>
+                <div class="status-item mt-2">
+                    <span class="status-label">Anomaly Detection Agent:</span>
+                    <span class="badge bg-success">Active</span>
+                </div>
+                <div class="status-item mt-2">
+                    <span class="status-label">Learning Agent:</span>
+                    <span class="badge bg-warning">Learning</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-history"></i> Recent Processing Activity
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Session ID</th>
+                                <th>Document Type</th>
+                                <th>Status</th>
+                                <th>Anomalies</th>
+                                <th>Processing Time</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-activity">
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">
+                                    <i class="fas fa-info-circle"></i> No recent activity
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.workflow-steps {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+    min-width: 150px;
+}
+
+.step-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.step-content h6 {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.step-content p {
+    font-size: 0.9em;
+    color: #6c757d;
+    margin: 0;
+}
+
+.step-arrow {
+    color: #667eea;
+    font-size: 20px;
+    margin: 0 10px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-label {
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .workflow-steps {
+        flex-direction: column;
+    }
+    
+    .step-arrow {
+        transform: rotate(90deg);
+        margin: 10px 0;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Load dashboard data
+    loadDashboardData();
+    
+    // Refresh data every 30 seconds
+    setInterval(loadDashboardData, 30000);
+});
+
+function loadDashboardData() {
+    fetch('/api/summary')
+        .then(response => response.json())
+        .then(data => {
+            // Update dashboard metrics
+            document.getElementById('documents-processed').textContent = data.total_documents_processed || 0;
+            document.getElementById('anomalies-detected').textContent = data.total_anomalies_detected || 0;
+            
+            if (data.total_documents_processed > 0) {
+                const successRate = Math.round((data.successful_processing / data.total_documents_processed) * 100);
+                document.getElementById('success-rate').textContent = successRate + '%';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading dashboard data:', error);
+        });
+}
+
+function loadSampleData() {
+    // This would load sample documents for testing
+    alert('Sample data loading feature would be implemented here');
+}
+</script>
+{% endblock %}
+
