@@ -9,6 +9,27 @@
 
 ---
 
+## 🚀 **Quick Deploy to Streamlit Cloud**
+
+### **Main File:** `streamlit_app/app.py` ✅
+
+**3 Steps to Deploy:**
+1. Go to: https://share.streamlit.io/
+2. Select repo: `git-bonda108/agentic-ai-document-anomaly-detection`
+3. **Main file path:** `streamlit_app/app.py` ← **USE THIS!**
+
+**Add Secrets (in Streamlit Cloud → Advanced settings):**
+```
+AWS_ACCESS_KEY_ID=your_key
+AWS_SECRET_ACCESS_KEY=your_secret
+AWS_REGION=us-east-1
+OPENAI_API_KEY=your_key
+```
+
+📖 **Full deployment guide:** See [STREAMLIT_CLOUD_DEPLOY.md](STREAMLIT_CLOUD_DEPLOY.md)
+
+---
+
 ## 📋 Table of Contents
 
 - [Overview](#overview)
@@ -129,14 +150,14 @@ The **DOC Anomaly Detection System** is a production-ready, agentic AI solution 
 
 ### Prerequisites
 - Python 3.9+
-- AWS Account with IAM credentials
+- AWS Account with IAM credentials (optional, for scalability)
 - OpenAI API Key (GPT-4o access)
 - Git
 
 ### 1. Clone Repository
 ```bash
-git clone <repository-url>
-cd "DOC ANOMALY DETECTION SYSTEM"
+git clone https://github.com/git-bonda108/agentic-ai-document-anomaly-detection.git
+cd agentic-ai-document-anomaly-detection
 ```
 
 ### 2. Install Dependencies
